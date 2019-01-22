@@ -131,13 +131,13 @@ TIMESTAMP_T *tm_current(TIMESTAMP_T *tp)
 	struct timespec ts;
 	time_t second, day, leap_day, month, year;
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(4,8,0)
-	ts = CURRENT_TIME_SEC;
-#else
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 14, 0)
 	ktime_get_real_ts(&ts);
+#else
+	ts = CURRENT_TIME_SEC;
 #endif
-
 	second = ts.tv_sec;
+
 	second -= sys_tz.tz_minuteswest * SECS_PER_MIN;
 
 	/* Jan 1 GMT 00:00:00 1980. But what about another time zone? */
